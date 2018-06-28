@@ -23,13 +23,7 @@ set -x
 
 
 # Determine which Seafile version to install
-cat <<EOF
 
-  Possible options:
-  1 = Seafile Community Edition (CE)
-  2 = Seafile Professional (PRO)
-
-EOF
 
 select SEAFILE_SERVER_VERSION in CE PRO ABORT
 do
