@@ -30,7 +30,7 @@ cat <<EOF
   2 = Seafile Professional (PRO)
 
 EOF
-PS3="Which Seafile version would you like to install? "
+
 select SEAFILE_SERVER_VERSION in CE PRO ABORT
 do
 case "${SEAFILE_SERVER_VERSION}" in
