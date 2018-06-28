@@ -167,6 +167,9 @@ echo -----------------------------------------------------------------
 cat /etc/passwd
 }
 
+function install-gpared {
+	apt-get install gparted -y
+}
 
 function description {
 clear
@@ -1171,6 +1174,7 @@ chown -R ${SEAFILE_SERVER_USER}.nogroup ${SEAFILE_SERVER_HOME}/$(basename ${0})_
 
 
 # Install Seafile server
+install-gpared
 print-system-infos
 description
 ensure-we-are-running-the-installer-on-a-supported-operating-system
