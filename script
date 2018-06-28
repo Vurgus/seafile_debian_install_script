@@ -37,8 +37,12 @@ case "${SEAFILE_SERVER_VERSION}" in
 ABORT) echo "Aborting" ; break ;;
 "") echo "$REPLY: Wrong value. Select 1 or 2." ;;
 *)
-
+if [ ${SEAFILE_SERVER_VERSION} = "CE" ]
+then
 SEAFILE_SERVER_PROFESSIONAL=disabled
+else
+SEAFILE_SERVER_PROFESSIONAL=enabled
+fi
 
 # Vars
 SERVER_NAME=$(hostname -s | cut -c -16)
