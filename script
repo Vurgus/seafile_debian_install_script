@@ -67,135 +67,8 @@ fi
 
 
 # Functions
-function print-system-infos {
-# Log system infos
-echo Timestamp
-echo -----------------------------------------------------------------
-date
-echo
-echo
-echo Hostnames
-echo -----------------------------------------------------------------
-echo "$(hostname -f),$(hostname -s),$(hostname -d),$(hostname -i)"
-echo
-echo
-echo Content of /etc/hosts
-echo -----------------------------------------------------------------
-cat /etc/hosts
-echo
-echo
-echo OS
-echo -----------------------------------------------------------------
-lsb_release -a
-echo
-echo
-echo OS Architecture
-echo -----------------------------------------------------------------
-echo ${ARCH}
-echo
-echo
-echo Debian Package Architecture
-echo -----------------------------------------------------------------
-echo ${DEB_ARCH}
-echo
-echo
-echo CPU info
-echo -----------------------------------------------------------------
-echo cat /proc/cpuinfo
-echo
-echo
-echo Memory info
-echo -----------------------------------------------------------------
-echo cat /proc/meminfo
-echo
-echo
-echo Active Kernel
-echo -----------------------------------------------------------------
-uname -a
-echo
-echo
-echo Network Interfaces
-echo -----------------------------------------------------------------
-ifconfig -a
-echo
-echo
-echo IP Addresses
-echo -----------------------------------------------------------------
-ip addr show
-echo
-echo
-echo DNS Servers
-echo -----------------------------------------------------------------
-cat /etc/resolv.conf
-echo
-echo
-echo Routes
-echo -----------------------------------------------------------------
-route -n
-echo
-echo
-echo Content of /etc/network/interfaces
-echo -----------------------------------------------------------------
-cat /etc/network/interfaces
-echo
-echo
-echo Debian Version
-echo -----------------------------------------------------------------
-cat /etc/debian_version
-echo
-echo
-find /etc/apt/ -type f | grep -v gpg | while read line ; do echo ; \
-    echo Content of $line ; \
-    echo ----------------------------------------------------------------- ; \
-    cat $line ; \
-    echo ;
-done
-echo
-echo
-echo Installed packages
-echo -----------------------------------------------------------------
-dpkg -l
-echo
-echo
-echo Process List
-echo -----------------------------------------------------------------
-ps axu
-echo
-echo
-echo Local user accounts
-echo -----------------------------------------------------------------
-cat /etc/passwd
-}
-
 function install-gpared {
 	apt-get install gparted -y
-}
-
-function description {
-clear
-cat <<EOF
-
-  Installing Seafile Server ${SEAFILE_SERVER_VERSION} on
-  ${OS_DESC} (${ARCH}).
-
-  Features: NGINX, MariaDB, Memcached, SeafDAV, logrotate
-  -----------------------------------------------------------------
-
-  This installer is meant to run on a freshly installed machine
-  only. If you run it on a production server things can and
-  probably will go terribly wrong and you will lose valuable
-  data!
-
-  For questions or suggestions please contact me at
-  support@seafile.com
-
-  -----------------------------------------------------------------
-
-  Hit return to proceed or CTRL-C to abort.
-
-EOF
-read dummy
-clear
 }
 
 
@@ -1176,7 +1049,6 @@ chown -R ${SEAFILE_SERVER_USER}.nogroup ${SEAFILE_SERVER_HOME}/$(basename ${0})_
 # Install Seafile server
 install-gpared
 print-system-infos
-description
 ensure-we-are-running-the-installer-on-a-supported-operating-system
 are-we-root-abort-if-not
 does-user-exist-and-abort-if-he-does
