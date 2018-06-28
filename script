@@ -21,6 +21,23 @@
 # Uncomment to run in verbose mode
 set -x
 
+
+# Determine which Seafile version to install
+cat <<EOF
+
+  Possible options:
+  1 = Seafile Community Edition (CE)
+  2 = Seafile Professional (PRO)
+
+EOF
+PS3="Which Seafile version would you like to install? "
+select SEAFILE_SERVER_VERSION in CE PRO ABORT
+do
+case "${SEAFILE_SERVER_VERSION}" in
+ABORT) echo "Aborting" ; break ;;
+"") echo "$REPLY: Wrong value. Select 1 or 2." ;;
+*)
+
 SEAFILE_SERVER_PROFESSIONAL=disabled
 
 # Vars
