@@ -1048,7 +1048,6 @@ chown -R ${SEAFILE_SERVER_USER}.nogroup ${SEAFILE_SERVER_HOME}/$(basename ${0})_
 
 # Install Seafile server
 install-gpared
-print-system-infos
 ensure-we-are-running-the-installer-on-a-supported-operating-system
 are-we-root-abort-if-not
 does-user-exist-and-abort-if-he-does
