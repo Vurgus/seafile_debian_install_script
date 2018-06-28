@@ -25,18 +25,7 @@ set -x
 # Determine which Seafile version to install
 
 
-select SEAFILE_SERVER_VERSION in CE PRO ABORT
-do
-case "${SEAFILE_SERVER_VERSION}" in
-ABORT) echo "Aborting" ; break ;;
-"") echo "$REPLY: Wrong value. Select 1 or 2." ;;
-*)
-if [ ${SEAFILE_SERVER_VERSION} = "CE" ]
-then
 SEAFILE_SERVER_PROFESSIONAL=disabled
-else
-SEAFILE_SERVER_PROFESSIONAL=enabled
-fi
 
 # Vars
 SERVER_NAME=$(hostname -s | cut -c -16)
@@ -1219,7 +1208,5 @@ print-system-infos
 cat ${SEAFILE_SERVER_HOME}/$(basename ${0})_report.log
 
 exit
-esac
-done
 ) 2>&1 | tee /root/$(basename ${0})_installation.log
 chmod 600 /root/$(basename ${0})_installation.log
