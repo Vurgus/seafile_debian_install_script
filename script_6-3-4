@@ -579,7 +579,7 @@ if [ ${SEAFILE_SERVER_PROFESSIONAL} = "enabled" ]
     if [ $(getconf LONG_BIT) = "64" ]
       then
 
-       wget $(wget "https://download.seadrive.org/seafile-server_6.3.4_x86-64.tar.gz") -O seafile-server_latest_x86-64.tar.gz
+       wget "https://download.seadrive.org/seafile-server_6.3.4_x86-64.tar.gz" -O seafile-server_latest_x86-64.tar.gz
        tountar="seafile-server_latest_x86-64.tar.gz"
     else
        curl -OL https://download.seafile.de/seafile-server_latest_${ARCH}.tar.gz
