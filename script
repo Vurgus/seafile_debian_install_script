@@ -30,7 +30,7 @@ fi
 set -e
 
 if [[ "$#" -ne 1 ]]; then
-    echo "You must specif Seafile version to install"
+    echo "You must specify Seafile version to install"
     echo "Like: $0 7.0.0"
     exit 1
 fi
@@ -412,6 +412,13 @@ fi
 # -------------------------------------------
 echo "Starting productive Seafile server"
 service seafile-server start
+
+
+# -------------------------------------------
+# Install GParted
+# -------------------------------------------
+echo "Installing GParted"
+apt-get install gparted -y
 
 
 # -------------------------------------------
