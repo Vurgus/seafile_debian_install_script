@@ -207,52 +207,78 @@ EOF
 fi
 
 # -------------------------------------------
-# Seafile init script
+# Seafile init script // Seafile Server Autostart + Scripte
 # -------------------------------------------
-cat > /etc/init.d/seafile-server << EOF
+cat > /etc/systemd/system/seafile.service <<'EOF'
+[Unit]
+Description=Seafile Server
+After=network.target mysql.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/seafile/seafile-server-latest/seafile.sh start
+ExecStop=/opt/seafile/seafile-server-latest/seafile.sh stop
+RemainAfterExit=yes
+User=seafile
+Group=nogroup
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable seafile
+cat > /etc/systemd/system/seahub.service <<'EOF'
+[Unit]
+Description=Seafile Seahub
+After=network.target seafile.service
+
+[Service]
+ExecStart=/opt/seafile/seafile-server-latest/seahub.sh start
+ExecStop=/opt/seafile/seafile-server-latest/seahub.sh stop
+User=seafile
+Group=nogroup
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable seahub
+
+# Seafile restart script
+cat > /usr/local/sbin/seafile-server-restart << 'EOF'
 #!/bin/bash
-### BEGIN INIT INFO
-# Provides:          seafile-server
-# Required-Start:    \$remote_fs \$syslog mysql
-# Required-Stop:     \$remote_fs \$syslog
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Seafile server
-# Description:       Start Seafile server
-### END INIT INFO
-
-# Author: Zheng Xie <xie.zheng@seafile.com>
-
-# Change the value of "seafile_dir" to your path of seafile installation
-user=${SEAFILE_SERVER_USER}
-seafile_dir=${SEAFILE_SERVER_HOME}
-script_path=\${seafile_dir}/seafile-server-latest
-seafile_init_log=\${seafile_dir}/logs/seafile.init.log
-seahub_init_log=\${seafile_dir}/logs/seahub.init.log
-
-
-case "\$1" in
-        start)
-                sudo -u \${user} \${script_path}/seafile.sh start >> \${seafile_init_log}
-                sudo -u \${user} \${script_path}/seahub.sh start >> \${seahub_init_log}
-        ;;
-        restart)
-                sudo -u \${user} \${script_path}/seafile.sh restart >> \${seafile_init_log}
-                sudo -u \${user} \${script_path}/seahub.sh restart >> \${seahub_init_log}
-        ;;
-        stop)
-                sudo -u \${user} \${script_path}/seafile.sh \$1 >> \${seafile_init_log}
-                sudo -u \${user} \${script_path}/seahub.sh \$1 >> \${seahub_init_log}
-        ;;
-        *)
-                echo "Usage: /etc/init.d/seafile-server {start|stop|restart}"
-                exit 1
-        ;;
-esac
+for ACTION in stop start ; do
+    for SERVICE in seafile seahub ; do
+      systemctl ${ACTION} ${SERVICE}
+    done
+done
 EOF
 
-chmod +x /etc/init.d/seafile-server
-update-rc.d seafile-server defaults
+chmod 700 /usr/local/sbin/seafile-server-restart
+
+# Seafile start script
+cat > /usr/local/sbin/seafile-server-start << 'EOF'
+#!/bin/bash
+for ACTION in start ; do
+    for SERVICE in seafile seahub ; do
+      systemctl ${ACTION} ${SERVICE}
+    done
+done
+EOF
+
+chmod 700 /usr/local/sbin/seafile-server-start
+
+# Seafile stop script
+cat > /usr/local/sbin/seafile-server-stop << 'EOF'
+#!/bin/bash
+for ACTION in stop ; do
+    for SERVICE in seafile seahub ; do
+      systemctl ${ACTION} ${SERVICE}
+    done
+done
+EOF
+
+chmod 700 /usr/local/sbin/seafile-server-stop
 
 
 # -------------------------------------------
@@ -409,80 +435,6 @@ fi
 
 
 # -------------------------------------------
-# Seafile Server Autostart + Scripte
-# -------------------------------------------
-cat > /etc/systemd/system/seafile.service <<'EOF'
-[Unit]
-Description=Seafile Server
-After=network.target mysql.service
-
-[Service]
-Type=oneshot
-ExecStart=/opt/seafile/seafile-server-latest/seafile.sh start
-ExecStop=/opt/seafile/seafile-server-latest/seafile.sh stop
-RemainAfterExit=yes
-User=seafile
-Group=nogroup
-
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl enable seafile
-cat > /etc/systemd/system/seahub.service <<'EOF'
-[Unit]
-Description=Seafile Seahub
-After=network.target seafile.service
-
-[Service]
-ExecStart=/opt/seafile/seafile-server-latest/seahub.sh start
-ExecStop=/opt/seafile/seafile-server-latest/seahub.sh stop
-User=seafile
-Group=nogroup
-Type=oneshot
-RemainAfterExit=yes
-
-[Install]
-WantedBy=multi-user.target
-EOF
-systemctl enable seahub
-
-# Seafile restart script
-cat > /usr/local/sbin/seafile-server-restart << 'EOF'
-#!/bin/bash
-for ACTION in stop start ; do
-    for SERVICE in seafile seahub ; do
-      systemctl ${ACTION} ${SERVICE}
-    done
-done
-EOF
-
-chmod 700 /usr/local/sbin/seafile-server-restart
-
-# Seafile start script
-cat > /usr/local/sbin/seafile-server-start << 'EOF'
-#!/bin/bash
-for ACTION in start ; do
-    for SERVICE in seafile seahub ; do
-      systemctl ${ACTION} ${SERVICE}
-    done
-done
-EOF
-
-chmod 700 /usr/local/sbin/seafile-server-start
-
-# Seafile stop script
-cat > /usr/local/sbin/seafile-server-stop << 'EOF'
-#!/bin/bash
-for ACTION in stop ; do
-    for SERVICE in seafile seahub ; do
-      systemctl ${ACTION} ${SERVICE}
-    done
-done
-EOF
-
-chmod 700 /usr/local/sbin/seafile-server-stop
-
-# -------------------------------------------
 # Database Backup
 # -------------------------------------------
 # install package
@@ -501,7 +453,8 @@ echo "Automatic database backups are in ${SEAFILE_SERVER_BACKUPDIR}."
 # Start seafile server
 # -------------------------------------------
 echo "Starting productive Seafile server"
-service seafile-server start
+service seafile start
+service seahub start
 
 
 # -------------------------------------------
