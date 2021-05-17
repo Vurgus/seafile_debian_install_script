@@ -409,6 +409,14 @@ eval "sed -i 's/= ask_admin_email()/= \"${SEAFILE_ADMIN}\"/' ${INSTALLPATH}/chec
 eval "sed -i 's/= ask_admin_password()/= \"${SEAFILE_ADMIN_PW}\"/' ${INSTALLPATH}/check_init_admin.py"
 
 # -------------------------------------------
+# Fix permissions
+# -------------------------------------------
+chown ${SEAFILE_SERVER_USER}:${SEAFILE_SERVER_USER} -R ${SEAFILE_SERVER_HOME}
+if [[ -d /tmp/seafile-office-output/ ]]; then
+    chown ${SEAFILE_SERVER_USER}:${SEAFILE_SERVER_USER} -R /tmp/seafile-office-output/
+fi
+
+# -------------------------------------------
 # Start and stop Seafile eco system. This generates the initial admin user.
 # -------------------------------------------
 ${INSTALLPATH}/seafile.sh start
