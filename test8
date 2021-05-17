@@ -87,7 +87,6 @@ fi
 apt-get update
 
 if [[ ${SEAFILE_VERSION} =~ 8\.[0-9]*\.[0-9]* ]]; then
-echo "8 wird INSTALLIERT"
 	apt-get install -y python3 python3-setuptools python3-pip sudo \
 	openjdk-11-jre memcached libmemcached-dev zlib1g-dev pwgen curl openssl poppler-utils libpython2.7 libreoffice \
 	libreoffice-script-provider-python ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy nginx
@@ -96,7 +95,6 @@ echo "8 wird INSTALLIERT"
 	django-pylibmc django-simple-captcha python3-ldap
 else
 	if [[ ${SEAFILE_VERSION} =~ 7\.1[0-9]*\.[0-9]* ]]; then
-	echo "7 wird INSTALLIERT"
 		apt-get install -y python3 python3-setuptools python3-pip sudo \
 		openjdk-11-jre memcached libmemcached-dev zlib1g-dev pwgen curl openssl poppler-utils libpython2.7 libreoffice \
 		libreoffice-script-provider-python ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy nginx
@@ -104,7 +102,6 @@ else
 		pip3 install --timeout=3600 Pillow pylibmc captcha jinja2 sqlalchemy \
 		django-pylibmc django-simple-captcha python3-ldap
 	else
-	echo "6 wird INSTALLIERT"
 		apt-get install -y python2.7 sudo python-pip python-setuptools python-mysqldb python-ldap python-urllib3 \
 		openjdk-11-jre memcached libmemcached-dev zlib1g-dev pwgen curl openssl poppler-utils libpython2.7 libreoffice \
 		libreoffice-script-provider-python ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy nginx python-requests
@@ -410,14 +407,6 @@ cp ${INSTALLPATH}/check_init_admin.py ${INSTALLPATH}/check_init_admin.py.backup
 SEAFILE_ADMIN_PW=$(pwgen)
 eval "sed -i 's/= ask_admin_email()/= \"${SEAFILE_ADMIN}\"/' ${INSTALLPATH}/check_init_admin.py"
 eval "sed -i 's/= ask_admin_password()/= \"${SEAFILE_ADMIN_PW}\"/' ${INSTALLPATH}/check_init_admin.py"
-
-# -------------------------------------------
-# Fix permissions
-# -------------------------------------------
-chown ${SEAFILE_SERVER_USER}:${SEAFILE_SERVER_USER} -R ${SEAFILE_SERVER_HOME}
-if [[ -d /tmp/seafile-office-output/ ]]; then
-    chown ${SEAFILE_SERVER_USER}:${SEAFILE_SERVER_USER} -R /tmp/seafile-office-output/
-fi
 
 # -------------------------------------------
 # Start and stop Seafile eco system. This generates the initial admin user.
