@@ -412,6 +412,8 @@ eval "sed -i 's/= ask_admin_password()/= \"${SEAFILE_ADMIN_PW}\"/' ${INSTALLPATH
 # Start and stop Seafile eco system. This generates the initial admin user.
 # -------------------------------------------
 echo "hier bin ich 1"
+chown ${SEAFILE_SERVER_USER}:${SEAFILE_SERVER_USER} -R ${SEAFILE_SERVER_HOME}
+chown root:root -R /etc/seafile/seafile-data
 ${INSTALLPATH}/seafile.sh start
 ${INSTALLPATH}/seahub.sh start
 echo "hier bin ich 2"
