@@ -300,6 +300,46 @@ EOF
 chmod +x /etc/init.d/seafile-server
 update-rc.d seafile-server defaults
 
+# -------------------------------------------
+# Seafile Server Scripte
+# -------------------------------------------
+
+# Seafile restart script
+cat > /usr/local/sbin/seafile-server-restart << 'EOF'
+#!/bin/bash
+for ACTION in stop start ; do
+    for SERVICE in seafile-server ; do
+      systemctl ${ACTION} ${SERVICE}
+    done
+done
+EOF
+
+chmod 700 /usr/local/sbin/seafile-server-restart
+
+# Seafile start script
+cat > /usr/local/sbin/seafile-server-start << 'EOF'
+#!/bin/bash
+for ACTION in start ; do
+    for SERVICE in seafile-server ; do
+      systemctl ${ACTION} ${SERVICE}
+    done
+done
+EOF
+
+chmod 700 /usr/local/sbin/seafile-server-start
+
+# Seafile stop script
+cat > /usr/local/sbin/seafile-server-stop << 'EOF'
+#!/bin/bash
+for ACTION in stop ; do
+    for SERVICE in seafile-server ; do
+      systemctl ${ACTION} ${SERVICE}
+    done
+done
+EOF
+
+chmod 700 /usr/local/sbin/seafile-server-stop
+
 
 # -------------------------------------------
 # Seafile
