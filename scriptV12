@@ -446,11 +446,12 @@ SESSION_SAVE_EVERY_REQUEST          = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE     = False
 
 FILE_SERVER_ROOT                    = 'http://${IP_OR_DOMAIN}/seafhttp'
+CSRF_TRUSTED_ORIGINS                = ["https://seafile.example.com"]
 EOF
 
 
 # -------------------------------------------
-# Configuring seahub_settings.py
+# Configuring .env
 # -------------------------------------------
 cat >> ${DEST_ENV_INI} <<EOF
 TIME_ZONE=UTC
