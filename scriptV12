@@ -389,6 +389,7 @@ TOPDIR=$(dirname "${INSTALLPATH}")
 DEFAULT_CONF_DIR=${TOPDIR}/conf
 SEAFILE_DATA_DIR=${TOPDIR}/seafile-data
 DEST_SETTINGS_PY=${TOPDIR}/conf/seahub_settings.py
+DEST_ENV_INI=${TOPDIR}/conf/.env
 
 mkdir -p ${DEFAULT_CONF_DIR}
 
@@ -447,6 +448,23 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE     = False
 FILE_SERVER_ROOT                    = 'http://${IP_OR_DOMAIN}/seafhttp'
 EOF
 
+
+# -------------------------------------------
+# Configuring seahub_settings.py
+# -------------------------------------------
+cat >> ${DEST_ENV_INI} <<EOF
+TIME_ZONE=UTC
+JWT_PRIVATE_KEY=$(pwgen -s 40 1)
+SEAFILE_SERVER_PROTOCOL=https
+SEAFILE_SERVER_HOSTNAME=seafile.example.com
+SEAFILE_MYSQL_DB_HOST=localhost # your MySQL host
+SEAFILE_MYSQL_DB_PORT=3306
+SEAFILE_MYSQL_DB_USER=seafile
+SEAFILE_MYSQL_DB_PASSWORD=${SQLSEAFILEPW}
+SEAFILE_MYSQL_DB_CCNET_DB_NAME=ccnet_db
+SEAFILE_MYSQL_DB_SEAFILE_DB_NAME=seafile_db
+SEAFILE_MYSQL_DB_SEAHUB_DB_NAME=seahub_db
+EOF
 
 # -------------------------------------------
 # Backup check_init_admin.py befor applying changes
